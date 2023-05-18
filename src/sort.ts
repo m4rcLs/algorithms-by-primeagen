@@ -24,3 +24,42 @@ function bubble_sort(arr: number[]): void {
     }
   }
 }
+
+// Quicksort has O(n log n) to O(n²) (for reversed sorted arrays)
+// Merge Sort has high constant factor in pre for memcopying arrays
+function partition(arr: number[], low: number, high: number): number {
+  const pivot = arr[high];
+  let idx = low - 1;
+
+  for (let i = low; i < high; ++i) {
+    // Sorting everything left to the pivot
+    if (arr[i] <= pivot) {
+      idx++;
+      const tmp = arr[i];
+      arr[i] = arr[idx];
+      arr[idx] = tmp;
+    }
+  }
+
+  // Move the pivot
+  idx++;
+  arr[high] = arr[idx];
+  arr[idx] = pivot;
+  return idx;
+}
+
+function qs(arr: number[], low: number, high: number): void {
+  // Base case
+  if (low >= high) {
+    return;
+  }
+
+  const pivotIdx = partition(arr, low, high);
+
+  qs(arr, low, pivotIdx - 1);
+  qs(arr, pivotIdx + 1, high);
+}
+
+export default function quick_sort(arr: number[]): void {
+  qs(arr, 0, arr.length - 1);
+}
