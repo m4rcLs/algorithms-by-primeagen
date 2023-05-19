@@ -96,3 +96,139 @@ class Queue<T> {
     return this.head?.value;
   }
 }
+
+export default class DoublyLinkedList<T> {
+  public length: number;
+  private head?: Node<T>;
+  private tail?: Node<T>;
+  constructor() {
+    this.length = 0;
+    this.head = this.tail = undefined;
+  }
+
+  prepend(item: T): void {
+    const node: Node<T> = { value: item };
+    this.length++;
+    if (!this.head) {
+      this.head = this.tail = node;
+      return;
+    }
+
+    node.next = this.head;
+    this.head.prev = node;
+    this.head = node;
+    return;
+  }
+  insertAt(item: T, idx: number): void {
+    if (idx > this.length) {
+      throw new Error("idx out of range");
+    }
+
+    if (idx === this.length) {
+      this.append(item);
+      return;
+    }
+    if (idx === 0) {
+      this.prepend(item);
+      return;
+    }
+
+    let node = this.getAt(idx);
+
+    if (!node) {
+      return;
+    }
+    const newNode: Node<T> = { value: item };
+    this.length++;
+
+    newNode.next = node;
+    newNode.prev = node.prev;
+    node.prev = newNode;
+
+    if (newNode.prev) {
+      newNode.prev.next = newNode;
+    }
+  }
+  append(item: T): void {
+    const node: Node<T> = { value: item };
+    this.length++;
+    if (!this.tail) {
+      this.tail = this.head = node;
+      return;
+    }
+
+    node.prev = this.tail;
+    this.tail.next = node;
+    this.tail = node;
+
+    return;
+  }
+  remove(item: T): T | undefined {
+    let node = this.head;
+
+    for (let i = 0; i < this.length && node; ++i) {
+      if (item === node.value) {
+        break;
+      }
+      node = node.next;
+    }
+    if (!node) {
+      return;
+    }
+
+    return this.removeNode(node);
+  }
+
+  removeAt(idx: number): T | undefined {
+    if (idx > this.length) {
+      throw new Error("idx out of range");
+    }
+
+    let node = this.getAt(idx);
+
+    if (!node) {
+      return;
+    }
+
+    return this.removeNode(node);
+  }
+
+  private removeNode(node: Node<T>): T | undefined {
+    if (node.next) {
+      node.next.prev = node.prev;
+    }
+
+    if (node.prev) {
+      node.prev.next = node.next;
+    }
+
+    if (node === this.head) {
+      this.head = node.next;
+    }
+
+    if (node === this.tail) {
+      this.tail = node.prev;
+    }
+
+    this.length--;
+    if (this.length === 0) {
+      this.head = this.tail = undefined;
+    }
+
+    node.next = node.prev = undefined;
+
+    return node.value;
+  }
+
+  get(idx: number): T | undefined {
+    return this.getAt(idx)?.value;
+  }
+  private getAt(idx: number): Node<T> | undefined {
+    let node = this.head;
+    for (let i = 0; i < idx && node?.next; ++i) {
+      node = node.next;
+    }
+
+    return node;
+  }
+}
