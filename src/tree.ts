@@ -1,3 +1,4 @@
+// Caching or Autocomplete => Trie
 // preOrder, inOrder, postOrder Traversals
 // visitNode(), recurseLeft(), recurseRight() => preOrder (root i = start)
 // recurseLeft(), visitNode(), recurseRight() => inOrder (root i = middle)
@@ -54,7 +55,6 @@ export function in_order_search(head: BinaryNode<number>): number[] {
 // 1) no child: simple delete
 // 2) one child: set parent to child
 // 3) two children: replace with largest on smallest side or smallest on large side
-
 type BinaryNode<T> = {
   value: T;
   left: BinaryNode<T> | null;
